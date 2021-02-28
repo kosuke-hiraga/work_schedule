@@ -1,0 +1,14 @@
+<h1>user_page</h1>
+
+
+<div>
+	<%= '名前:' + session[:name]  if session[:name] != nil%>
+</div>
+<div>
+	<%= 'パス:'  + session[:password] if session[:password] != nil%>
+</div>
+<%= link_to '前に戻ります', root_path %>
+
+
+
+<%= link_to '勤務表　修正', '/work_schedule' %>

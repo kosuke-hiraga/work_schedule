@@ -1,0 +1,35 @@
+<h1>ろぐいん</h1>
+
+
+<%= form_tag("/users", method: "get") do %>
+  Form contents
+  <div>
+  	<%= label_tag :名前 %>
+  	<%= text_field_tag  :name %>
+  </div>
+  <div>
+  	<%= label_tag :パスワード %>
+  	<%= text_field_tag  :password %>
+  </div>
+  <div>
+  	<%= submit_tag "ログイン" %>
+  </div>
+<% end %>
+
+<%= form_with(url: "/login", method: "get", local: 'true')  do |f| %>
+  form_withで作ってみた  loginController行き
+  <div>
+    <%= f.label :名前 %>
+    <%= f.text_field  :name %>
+  </div>
+  <div>
+    <%= f.label :パスワード %>
+    <%= f.text_field  :password %>
+  </div>
+  <div>
+    <%= f.submit "ログイン2" %>
+  </div>
+<% end %>
+
+
+<%= link_to '次にすすみます', '/users' %>

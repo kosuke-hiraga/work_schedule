@@ -1,0 +1,35 @@
+<h1>ろぐいん</h1>
+
+
+<%= form_tag("/users", method: "get") do %>
+  Form contents
+  <div>
+  	<%= label_tag :名前 %>
+  	<%= text_field_tag  :name %>
+  </div>
+  <div>
+  	<%= label_tag :パスワード %>
+  	<%= text_field_tag  :password %>
+  </div>
+  <div>
+  	<%= submit_tag "ログイン" %>
+  </div>
+<% end %>
+
+<%= form_for(:session, url: "/users", method: "get") do %>
+  form_forで作ってみた
+  <div>
+    <%= label_tag :名前 %>
+    <%= text_field_tag  :name %>
+  </div>
+  <div>
+    <%= label_tag :パスワード %>
+    <%= text_field_tag  :password %>
+  </div>
+  <div>
+    <%= submit_tag "ログイン2" %>
+  </div>
+<% end %>
+
+
+<%= link_to '次にすすみます', '/users' %>
