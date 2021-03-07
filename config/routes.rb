@@ -16,7 +16,8 @@ Rails.application.routes.draw do
   post '/work_schedule',  to: 'work_schedule#create'
 
 
-  post '/work_schedule/getList',  to: 'work_schedule#getList'
+  post '/work_schedule/getList',     to: 'work_schedule#getList'
+  post '/work_schedule/getProject',  to: 'work_schedule#getProject'
 
   resources :session
 end

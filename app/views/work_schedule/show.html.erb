@@ -5,53 +5,54 @@
 	drag Now!!
 </div>
 
-
+<div id="allWrapper"></div>
 <div id = 'TitleSpace' class = 'flex_container'>
-	<div>勤務表</div>	
-	<input id = 'WorkingDate' type = 'date' value= <%= Date.today%>>日付
-	<div id = 'ajax'>通信用ボタン</div>
+	<div id = 'title'>勤務表</div>	
+	<input id = 'WorkingDate' type = 'date' value= <%= Date.today%>>
+	<div id = 'testB'>testB</div>
 </div>
 
 
 <div class = flex_container>
 
 
-	<div id = 'task' class = 'task' ondrop="onDrop(event);">
-		<div class = 'changeProcessSpace'>
-<!-- 		  <button id = 'button_UI' class="btn btn-primary color_UI" type="submit">UI</button>
-		  <button id = 'button_PG' class="btn btn-primary color_PG" type="submit">PG</button>
-		  <button id = 'button_PT' class="btn btn-primary color_PT" type="submit">PT</button>
-		  <button id = 'button_IT' class="btn btn-primary color_IT" type="submit">IT</button>
-		  <button id = 'button_ST' class="btn btn-primary color_ST" type="submit">ST</button> -->
-		  <button id = 'button_UI' class="btn color_UI" type="submit">UI</button>
+	<div id = 'task' class = 'task'>
+		<div class = 'changeProcessSpace flex_container'>
+			<button id = 'button_UI' class="btn color_UI" type="submit">UI</button>
 		  <button id = 'button_PG' class="btn color_PG" type="submit">PG</button>
 		  <button id = 'button_PT' class="btn color_PT" type="submit">PT</button>
 		  <button id = 'button_IT' class="btn color_IT" type="submit">IT</button>
 		  <button id = 'button_ST' class="btn color_ST" type="submit">ST</button>
 		  <input  id = 'button_status' name = 'button_status' >
-	  </div>
+		</div>
 
 	  <div id = "showTasksSpace">
-	  	
-	  	<div id = 'showTmpTaskArea' class ='Lis'>
+	  	<div id = 'showTmpTaskArea' class ='p'>
 	  		<div id = 'backArea'>
-    			<div id = 'backButton'> ← </div>
+    			<div id = 'backButton'> <div class="arrow-round"></div> </div>
     			<div id = 'showProjectName'> sample project</div>
   			</div>
   			<div id = 'tmpTasks'></div>
 	  	</div>
 
-		  <div id = 'list2' class ='List'>
+<!-- 		  <div id = 'list2' class ='list'>
 		  	うんち
 		  </div>
 
-		  <div id = 'list1' class ='List'>
+		  <div id = 'list1' class ='list'>
+		  </div> -->
 		  	<!-- test1 -->
-<!--  				<% @work.each do  |f| %>
-					<ul>
-						<%= content_tag(:div, f.work_content, id: f.project_id, class: "data-work_object taskInTheList", draggable: "true")  %>
-					</ul>
-				<% end %> -->
+		  <div id = 'listSpace'>
+	 			<% @project.each do |f| %>
+					<%= content_tag(:div, f.project_name, id: f.project_id, class: "list", draggable: "true")  %>
+				<% end %>
+			</div>
+			<div id = 'project_pagination' class = "flex_container" >
+				<% page_num = 1 %>
+				<% while page_num < @page do %>
+					<%= content_tag(:li, page_num, id: 'page' + page_num.to_s, class: "page_num") %>
+					<% page_num += 1 %>
+				<% end %>
 			</div>
 		</div>
 	</div>
@@ -66,43 +67,37 @@
 <!-- style = 'visibility:hidden' -->
 
 			<div class = 'flex_container calc_zone'>
-				<div id = 'dropArea_forTask'class = 'work_space flex_container2' >
-					ドロップエリア
+				<div id = 'calc' class = 'work_space_for_calc  flex_container2' >
+					<div id = 'AutomaticCalculation'> Automatic calculation</div>
 					<% @droped_tasks.each do |f| %>
-			  		<%= content_tag(:div, f.user_id, id: f.project_id, class: "data-work_object dropedTasks resizable color_ST" , draggable: "true")  %>
+						<% id =  f.project_id + '-' + f.work_id + '-' + f.project_seq  %>
+			  		<%= content_tag(:div, f.project_id, id: 'calcData' + id, class: 'calcDataComponent')  %>
+			  		<%= content_tag(:input,'',  id: 'calcDataHidden_workTime'      + id,  type: 'hidden',   name: "work_time[]",     value: f.work_time)   %>
+			  		<%= content_tag(:input,'',  id: 'calcDataHidden_projectId'     + id,  type: 'hidden',   name: "project_id[]",    value: id)  %>
+			  	  <%= content_tag(:input,'',  id: 'calcDataHidden_SystemProcess' + id,  type: 'hidden',   name: "SystemProcess[]", value: f.work_knd)  %>
+			  	<% end %>
+				</div>
+				<div id = 'dropArea_forTask' class = 'work_space flex_container2' >
+					<!-- ドロップエリア -->
+					<div id = 'dropHere'> Drop Here!!</div>
+					<% @droped_tasks.each do |f| %>
+						<% id =  f.project_id + '-' + f.work_id + '-' + f.project_seq  %>
+			  		<%= content_tag(:div, f.work.work_content, id: id, class: "data-work_object dropedTasks resizable" , draggable: "true")  %>
 			  		<!-- <%= content_tag(:div, f.user_id, id: f.project_id, class: "data-work_object dropedTasks resizable", draggable: "true")  %> -->
 			  	<% end %>
 				</div>
-
-				<div id = 'calc' class = 'work_space_for_calc  flex_container2' >
-					計算するよ、どこまでも
-					<% @droped_tasks.each do |f| %>
-						 <%      puts 'pl'
-										 # workTimeHour = (f.work_time / 60).floor
-    		# 					 workTimeMinitus = f.work_time % 60
-    		# 					 puts workTimeHour
-    		# 					 puts workTimeMinitus
-    		# 					 # f.work_time = workTimeHour.to_s + '時間' + workTimeMinitus.to_s + '分'
-    		# 					 f.work_time = workTimeMinitus.to_s + '分'
-    		# 					 puts f.work_time
-						%>
-			  		<%= content_tag(:div, f.work_time, id: 'calcData' + f.project_id)  %>
-			  		<%= content_tag(:input,'',  id: 'calcDataHidden_workTime'      + f.project_id,  type: 'hidden',   name: "work_time[]",     value: f.work_time)   %>
-			  		<%= content_tag(:input,'',  id: 'calcDataHidden_projectId'     + f.project_id,  type: 'hidden',   name: "project_id[]",    value: f.project_id)  %>
-			  	  <%= content_tag(:input,'',  id: 'calcDataHidden_SystemProcess' + f.project_id,  type: 'hidden',   name: "SystemProcess[]", value: f.work_knd)  %>
-			  	<% end %>
-				</div>
-
-
-
 			</div>
-			<%= f.submit "登録"  %>
+
+			<div id='inputWork_footer' class="flex_container">
+				<div id='calcSum'>Total:</div>
+				<%= f.submit("登録", class: "submitbutton")  %>
+			</div>
 			<% end %>
 		</div>
 
 
 
-		<div class = 'work_space2'   >
+		<div class='work_space2'   >
 			削除エリア
 
 		</div>
@@ -110,17 +105,32 @@
 
   </div>
 
-  <div class = 'register_work'>
-		・登録結果
-		<% @worked_list.each do  |f| %>
-			<ul>
-				<!-- f[0] 作業区分　f[1] 作業時間合計 -->
-				<li><%= f[0] + '/' + f[1].to_s %></li>
-			</ul>
-		<% end %>
+
+
+	<div id='hamburgerMenu'>
+		<span class='hamburgerMenuLine line1'></span>
+		<span class='hamburgerMenuLine line2'></span>
+		<span class='hamburgerMenuLine line3'></span>
 	</div>
 
-
+	<div class="menu_wrapper" id="menu_wrapper">
+	<div id="menu" class="menu">
+    	<ul>
+        	<li><a href="#1">メニュー１</a></li>
+        	<li><a href="#2">メニュー２</a></li>
+        	<li><a href="#3">メニュー３</a></li>
+        	<div class='register_work'>
+						・登録結果
+						<% @worked_list.each do  |f| %>
+							<ul>
+							<!-- f[0] 作業区分　f[1] 作業時間合計 -->
+							<li><%= f[0] + '/' + f[1].to_s %></li>
+							</ul>
+						<% end %>
+					</div>
+    	</ul>
+	</div>
+</div>
 
 </div>
 <%= link_to '前に戻ります', '/users' %>

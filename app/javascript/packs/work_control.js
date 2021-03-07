@@ -19,8 +19,8 @@ function initialize_set_event(){
   document.getElementById('button_UI').click();
 
   //プロジェクト一覧を押下時のイベントを付与
-  list = document.getElementById('list1');
-  set_event_onckick2(list);
+  // list = document.getElementById('list1');
+  // set_event_onckick2(list);
 
   //ドロップエリアにイベントを付与
   dropArea_forTask = document.getElementById('dropArea_forTask');
@@ -46,18 +46,53 @@ function initialize_set_event(){
     /*長さを設定*/
     let hiddenWorkTime = document.getElementById('calcDataHidden_workTime' + element.id);
     element.style.width = hiddenWorkTime.value + 'px';
+    element.style.height = '50px';
 
     /*色を設定*/
     let hiddenSystemProcess = document.getElementById('calcDataHidden_SystemProcess' + element.id);
     initializeSetColor(element, hiddenSystemProcess.value);
+
+    /*時間の変換処理を設定*/
+    convertWorkTime(element);
+    convertWorkTime_forSum(element);
   });
-  dropedTasks.forEach(element => convertWorkTime(element) );
+
+  // dropedTasks.forEach(element => {
+  //   convertWorkTime(element);
+  //   convertWorkTime_forSum(element);
+  //   } );
+
+  let testB = document.getElementById("testB");
+  testB.addEventListener('click', removeProject);
+
+  /**/
+  const allWrapper = document.getElementById('allWrapper');
+  const menu_wrapper = document.getElementById('menu_wrapper');
+  const menu = document.getElementById('menu');
+  let hamburgerMenu = document.getElementById("hamburgerMenu");
+  hamburgerMenu.addEventListener('click', () => {
+    hamburgerMenu.classList.toggle('clicked');
+    menu_wrapper.classList.toggle('clicked');
+    allWrapper.classList.toggle('clicked');
+    menu.classList.toggle('clicked');
+  });
 
 
 
-  ajaxB = document.getElementById('ajax');
+  // // const ham = document.getElementById('ham');
+  
+  // ham.addEventListener('click', function() {
+  //   ham.classList.toggle('clicked');
+  //   menu_wrapper.classList.toggle('clicked');
+  // });
+
+
+  let page_num = getHTMLClass('page_num');
+  setEventListener(page_num, 'click', project_pagination);
+
+  // ajaxB = document.getElementById('ajax');
   // ajaxB.addEventListener('click', ajaxHTTP);
-  ajaxB.addEventListener('click', removeClass);
+  // ajaxB.addEventListener('click', removeClass);
 
   backButton = document.getElementById('backButton');
   backButton.addEventListener('click', removeClass);
@@ -66,7 +101,7 @@ function initialize_set_event(){
   
   // list3 = document.getElementById('list');
   // list3.addEventListener('click', showTmpTaskList);
-  list = getHTMLClass('List');
+  list = getHTMLClass('list');
   setEventListener(list, 'click', showTmpTaskList);
 
 
@@ -91,12 +126,7 @@ function setEvent__DropArea_forTask(targertClass){
 }
 
 
-function showTmpTaskList(e){
-
-  // let showTasksSpace = document.getElementById('showTasksSpace');
-   
-  // let list3 = document.getElementById('list3');
-  
+function showTmpTaskList(e){  
   let backButton = document.getElementById('backArea');
   backButton.style.display = 'flex';
 
@@ -104,13 +134,13 @@ function showTmpTaskList(e){
   let showTmpTaskArea = document.getElementById('showTmpTaskArea');
   let showProjectName = document.getElementById('showProjectName');
   showProjectName.textContent = e.target.textContent;
-  console.log(e.target);
   showTmpTaskArea.classList.add('tmpTaskList');
 
-  ajaxHTTP();
+  ajaxHTTP(e.target);
 }
 
 function ajaxHTTP(e){
+  // console.log(e.id);
   const axiosBase = require('axios');
   const axios = axiosBase.create({
     responseType: 'text'
@@ -118,7 +148,7 @@ function ajaxHTTP(e){
   // axios.get('http://localhost:3000/work_schedule')
   axios.defaults.headers['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content')
   axios.post('http://localhost:3000/work_schedule/getList', {
-    id: '101'
+    id: e.id
   })
   .then(function (response){
 
@@ -129,7 +159,7 @@ function ajaxHTTP(e){
       let addDivNode = createDivNode(element['project_id']);
 
       let divNode = document.createElement("div");
-      divNode.id =  element['project_id'];
+      divNode.id =  element['project_id'] + '-' + element['id'];
       divNode.classList.add('data-work_object');
       divNode.classList.add('taskInTheList');
       divNode.draggable = 'true';
@@ -211,8 +241,8 @@ function removeClass(targetNode){
  * @return {[type]}   [description]
  */
 function chengeProcesssType(e){
-  let taskArea = document.getElementById('task');
-  // let showTasksSpace = document.getElementById('showTasksSpace');
+  // let taskArea = document.getElementById('Task');
+  let taskArea = document.getElementById('showTasksSpace');
   
   /*「backgroundColor」だと hover時の色を取得してしまうので、borderカラーから取得するように変更*/
   // let RGB = window.getComputedStyle(e.target).backgroundColor;
@@ -224,7 +254,7 @@ function chengeProcesssType(e){
 
   /*opactiy追加の為rgbaを使用*/
   taskArea.style.borderColor = RGB;
-  taskArea.style.backgroundColor = 'rgba('+ RGB_Array[0] + ',' + RGB_Array[1] +','+ RGB_Array[2] +','+ '0.1)';
+  taskArea.style.backgroundColor = 'rgba('+ RGB_Array[0] + ',' + RGB_Array[1] +','+ RGB_Array[2] +','+ '0.3)';
   changeButtonStatus(e.target);
 }
 
@@ -244,7 +274,9 @@ function initializeSetColor(targetNode, color){
   let RGB_Array = RGB.substring(4, RGB.length - 1).split(',');
 
   /*opactiy追加の為rgbaを使用*/
-  targetNode.style.backgroundColor = 'rgba('+ RGB_Array[0] + ',' + RGB_Array[1] +','+ RGB_Array[2] +','+ '0.1)';
+  // targetNode.style.backgroundColor = 'rgba('+ RGB_Array[0] + ',' + RGB_Array[1] +','+ RGB_Array[2] +','+ '0.1)';
+  // targetNode.style.backgroundColor = 'rgb('+ RGB_Array[0] + ',' + RGB_Array[1] +','+ RGB_Array[2] );
+  targetNode.style.backgroundColor = 'rgba('+ RGB_Array[0] + ',' + RGB_Array[1] +','+ RGB_Array[2] +')';
 }
 
 
@@ -416,6 +448,8 @@ function caluculateWorkTime(e){
     // console.log('tmp2のID' +'/'+ existsDivHidden.id);
     existsDivHidden.value = parseInt(window.getComputedStyle(e).width);
   }
+
+  convertWorkTime_forSum();
 }
 
 
@@ -432,7 +466,10 @@ function caluculateWorkTime_onlyTouch(e){
   }
 
   let resizingTask = e.target.parentNode;
-  convertWorkTime(resizingTask);
+  /*合計値取得の際に、hidden項目を参照する様になった為追加*/
+  caluculateWorkTime(resizingTask);
+  // convertWorkTime(resizingTask);
+  convertWorkTime_forSum();
 }
 
 
@@ -443,7 +480,7 @@ function caluculateWorkTime_onlyTouch(e){
  * @return {[type]}              [description]
  */
 function convertWorkTime(targetObject){
-  // console.log('--convertWorkTime--');
+  console.log('--convertWorkTime--');
   let caluculateDiv = document.getElementById("calcData" + targetObject.id);
 
   let tmpWorkTime = parseInt(window.getComputedStyle(targetObject).width);
@@ -451,10 +488,106 @@ function convertWorkTime(targetObject){
   let workTimeMinitus = tmpWorkTime % 60;
 
   /*〇時間〇〇分　の形式で画面に表示する*/
-  caluculateDiv.textContent = workTimeHour + '時間' + workTimeMinitus + '分★';
+  let project_id = formatID(targetObject.id).project_id;
+  caluculateDiv.innerHTML = 'PJ No:' + project_id + '&nbsp;&nbsp;&nbsp;' + targetObject.textContent
+  caluculateDiv.innerHTML += '<br>';
+  caluculateDiv.innerHTML += workTimeHour + '時間' + workTimeMinitus + '分';
+}
+
+/**
+ * [convertWorkTime_forSum 合計時間出力用]
+ * @param  {[type]} targetObject [description]
+ * @return {[type]}              [description]
+ */
+function convertWorkTime_forSum(targetObject){
+  
+  let calcSum = document.getElementById("calcSum");
+
+  let tmpWorkTime = sumWorkTime();
+  let workTimeHour = Math.floor(tmpWorkTime / 60);
+  let workTimeMinitus = tmpWorkTime % 60;
+
+  console.log('★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★convertWorkTime_forSum');
+  console.log(tmpWorkTime);
+
+  /*〇時間〇〇分　の形式で画面に表示する*/
+  calcSum.innerHTML = 'Total:  ' + workTimeHour + '時間' + workTimeMinitus + '分';
 }
 
 
+
+/**
+ * [sumWorkTime name = work_time[]要素のvalueを全て取得し、纏める]
+ * @param  {[type]} e [description]
+ * @return {[type]} sumWorkTimeValue  [登録したTaskの合計時間]
+ */
+function sumWorkTime(e){
+  let workTimes = document.getElementsByName('work_time[]');
+  let sumWorkTimeValue = 0;
+  Array.from(workTimes).forEach(workTime => {
+    sumWorkTimeValue += parseInt(workTime.value);
+  });
+
+  // console.log(sumWorkTimeValue);
+  return sumWorkTimeValue
+}
+
+
+/**
+ * [formatID idを渡すと3つに分解する]
+ * @param  {[type]} id [「100-1-clones●seq1」の形式でidを受け取る]
+ * @return {[type]} structure [「project_id」「work_id」「project_seq」]
+ */
+function formatID(id){
+  let structure = {};
+  split_id = id.split('-');
+
+  structure.project_id  = split_id[0]
+  structure.work_id     = split_id[1]
+  structure.project_seq = split_id[2]
+
+  // let indexClones = project_id.indexOf('-clones');
+  // return project_id.substring('0', indexClones);
+  return structure
+}
+
+
+function formatID2(id, returnType){
+  let structure = {};
+  split_id = id.split('-');
+
+  structure.project_id  = split_id[0]
+  structure.work_id     = split_id[1]
+  structure.project_seq = split_id[2]
+  
+  if (returnType == 'project_id')
+    return structure.project_id
+  else if(returnType == 'work_id')
+    return structure.work_id
+  else if(returnType == 'project_seq')
+    return structure.project_seq
+  else
+    return 'None'
+}
+
+function UNTI(id, returnType){
+  let structure = {};
+  split_id = id.split('-');
+
+  let unti = '';
+
+  if (returnType == 'project_id'){
+    unti = split_id[0]
+  }else if(returnType == 'work_id'){
+    unti = split_id[1]
+  }else if(returnType == 'project_seq'){
+    unti = split_id[2]
+  }else{
+    console.log('unti');
+  }
+
+  return unti;
+}
 
 function createDivNode(e){
   // console.log(window.getComputedStyle(e));
@@ -462,6 +595,7 @@ function createDivNode(e){
   // divNode_func.textContent = parseInt(window.getComputedStyle(e.target).width);
   // divNode_func.textContent = parseInt(window.getComputedStyle(e).width);
   divNode_func.id = "calcData" + e.id;
+  divNode_func.classList.add('calcDataComponent');
   
   return divNode_func
 }
@@ -597,9 +731,31 @@ function onDrop(e) {
   // setEventListener(dropedTasks, 'click', onClick);
   setEventListener(dropedTasks, 'mouseover', caluculateWorkTime_onlyTouch);
 
-   // setEventListener(cloneElem, 'click', onClick);
+  deleteBackgroundString();
+
+   //mock
 }
 
+
+/**
+ * [deleteBackgroundString 画面に薄く表示されている文言を削除する]
+ * @param  {[type]} e [description]
+ * @return {[type]}   [description]
+ */
+function deleteBackgroundString(e){
+  try{
+    //「Drop Here!!」 を削除
+    let dropArea_forTask = document.getElementById('dropArea_forTask');
+    let dropHere = document.getElementById('dropHere');
+    dropArea_forTask.removeChild(dropHere)
+    //「Automatic calculation」 を削除
+    let calc = document.getElementById('calc');
+    let AutomaticCalculation = document.getElementById('AutomaticCalculation');
+    calc.removeChild(AutomaticCalculation);
+  }catch(error){
+    console.log('一度削除済みの場合、何もしない');
+  }
+}
 
 
 
@@ -675,27 +831,93 @@ function changeRemoveFlg(){
  * @param  {[type]} e [description]
  * @return {[type]}   [description]
  */
-  function removeTask(e){
-    // removeFlg = true;
-    console.log(e.target);
-    if (removeFlg == true){
-      console.log('消しますせ')
-      e.target.remove();
+function removeTask(e){
+  if (removeFlg == true){
+    e.target.remove();
 
-      /*計算エリアに表記されている数字、及びhiddenの値も削除する*/
-      let calcAreaTaskObjects = [];
-      calcAreaTaskObjects.workTime        = document.getElementById('calcData' + e.target.id);
-      calcAreaTaskObjects.hiddenWorkTime  = document.getElementById('calcDataHidden_workTime' + e.target.id);
-      calcAreaTaskObjects.hiddenProjectId = document.getElementById('calcDataHidden_projectId' + e.target.id);
-      calcAreaTaskObjects.SystemProcess   = document.getElementById('calcDataHidden_SystemProcess' + e.target.id);
+    /*計算エリアに表記されている数字、及びhiddenの値も削除する*/
+    let calcAreaTaskObjects = [];
+    calcAreaTaskObjects.workTime        = document.getElementById('calcData' + e.target.id);
+    calcAreaTaskObjects.hiddenWorkTime  = document.getElementById('calcDataHidden_workTime' + e.target.id);
+    calcAreaTaskObjects.hiddenProjectId = document.getElementById('calcDataHidden_projectId' + e.target.id);
+    calcAreaTaskObjects.SystemProcess   = document.getElementById('calcDataHidden_SystemProcess' + e.target.id);
 
-      calcAreaTaskObjects.workTime.remove();
-      calcAreaTaskObjects.hiddenWorkTime.remove();
-      calcAreaTaskObjects.hiddenProjectId.remove();
-      calcAreaTaskObjects.SystemProcess.remove();
+    calcAreaTaskObjects.workTime.remove();
+    calcAreaTaskObjects.hiddenWorkTime.remove();
+    calcAreaTaskObjects.hiddenProjectId.remove();
+    calcAreaTaskObjects.SystemProcess.remove();
+
+    /*Task削除後、合計時間の修正が必要の為、実施*/
+    convertWorkTime_forSum();
     }
-    
+
   }
+
+
+
+/**
+ * [project_pagination ページネイションをAjaxで実施する]
+ * @param  {[type]} e [クリックしたページ番号]
+ * @return {[type]}   [description]
+ */
+function project_pagination(e){
+  removeProject();
+
+  let clickPage = e.target.textContent;
+
+  const axiosBase = require('axios');
+  const axios = axiosBase.create({
+    responseType: 'text'
+  });
+  axios.defaults.headers['X-CSRF-TOKEN'] = $('meta[name=csrf-token]').attr('content')
+  axios.post('http://localhost:3000/work_schedule/getProject', {
+    id: clickPage
+  })
+  .then(function (response){
+    // let tmpTasks = document.getElementById('showTasksSpace');
+    let tmpTasks = document.getElementById('listSpace');
+    let project_pagination = document.getElementById('project_pagination');
+
+    /*AjaxでDBから取得した内容をDOMに追加する*/
+    response.data.forEach(element =>{
+      let addDivNode = createDivNode(element['project_id']);
+
+      let divNode = document.createElement("div");
+      divNode.id =  element['project_id'];
+      divNode.classList.add('list');
+      divNode.textContent = element['project_name'];
+
+      divNode.addEventListener('click', showTmpTaskList);
+
+      /*「appendChild」だとページネーション部分の後ろに追加されてしまう為「insertBefore」を使用*/
+      tmpTasks.insertBefore(divNode, null);
+    });
+
+    console.log('通信成功');
+  })
+  .catch(function (error){
+    console.log(error);
+    console.log('通信失敗');
+  })
+
+  .finally(function (){
+    //None
+  });
+
+}
+
+
+
+/**
+ * [removeProject project一覧を一旦リセットの為に全て削除する]
+ * @param  {[type]} e [description]
+ * @return {[type]}   [description]
+ */
+function removeProject(e){
+  let list = document.getElementsByClassName('list');
+  Array.from(list).forEach(listNode => listNode.remove());
+}
+
 
 
 
@@ -763,8 +985,9 @@ function setForCheckParameters(targertID, checkedID){
  */
 function changeCSS_ToDragTask(){
   let currentDragTask = document.getElementById('drag_image');
-  let taskArea = document.getElementById('task');
-  let RGB = window.getComputedStyle(taskArea).backgroundColor;
+  // let taskArea = document.getElementById('Tasl');
+  let showTasksSpace = document.getElementById('showTasksSpace');
+  let RGB = window.getComputedStyle(showTasksSpace).backgroundColor;
 
   /*RGB値を[R, G, B]の配列に分ける*/
   let RGB_Array = RGB.substring(5, RGB.length - 1).split(',');

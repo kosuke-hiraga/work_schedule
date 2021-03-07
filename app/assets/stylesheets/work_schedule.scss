@@ -6,6 +6,10 @@ body{
 	background-color: #DDDDDD;
 }
 
+li {
+	list-style-type:none;
+}
+
 .flex_container{
 	display:flex;
 
@@ -13,14 +17,29 @@ body{
 
 
 .flex_container2{
-	flex-direction:column
+	// display:flex;
+	flex-direction:column;
+	// justify-content: space-around;
 	
 }
 
+#title{
+	font-size: 10px;
+	font: bold;
+}
+
 .changeProcessSpace{
-	border: solid;
-	background-color: black;
+	// border: solid;
+	border-radius: 10px;
+	background-color: #BBBBBB;
 	height: 50px;
+
+	overflow:hidden;
+  // flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+		// display: grid;
+  // place-items: center;
 }
 
 // #button_UI{
@@ -99,9 +118,10 @@ body{
 	width: 300px;
 	height: 500px;
 
-	border: solid;
-	border-color: #FFCC99;
-	border-radius: 50px;
+
+
+	overflow:hidden;
+		// flex-direction:column;
 }
 
 
@@ -123,13 +143,12 @@ body{
 	border-radius: 10px;
 	border-color: #BBBBBB;
 
-	margin: 10px;
+	margin: 0px 10px;
 
 	background-color: #BBBBBB;
 }
 
 .work_space{
-
 	width: 500px;
 	height: 500px;
 
@@ -139,38 +158,61 @@ body{
 
 
 	// background-color: #BAD3FF;
-	background-color: #EEEEEE;
-	
+	background-color: #EEEEEE;	
+	position: relative;
 }
 
-.register_work{
-	width: 500px;
-	height: 400px;
+#dropHere{
+	font-size: 50px;
+	color: gray;
 
-	border: solid;
-	border-color: red;
+	position: absolute;
+	top: 175px;
+	left: 100px;
 }
+
+
+
+
 
 .data-work_object{
   width: 75px;
 	height: 25px;
+
+	margin: 10px;
+
 	background-color: rgba(100, 100, 100, 0.3);
-	border: solid;
-	border-color: green;
+	// border: solid;
+	// border-color: green;
 	border-radius: 10px;
 	text-align: center;
 	
+	box-shadow: 2px 2px 2px 2px;
 	opacity: 0;
 }
 
 .work_space_for_calc{
-	 width: 300px;
+	width: 300px;
 	height: 500px;
 	background-color: #DDDDDD;
 
 	// border: solid;
 	// border-color: yellow;
 	border-radius: 10px;
+
+	position: relative;
+}
+
+
+#AutomaticCalculation{
+	font-size: 50px;
+	color: gray;
+
+	position: absolute;
+	top: 150px;
+	left: 35px;
+
+	// z-index: 0;	
 }
 
 .calc_zone{
@@ -181,11 +223,62 @@ body{
 	// border-radius: 10px;
 }
 
-.List{
+#calcSum{
+	width:  300px;
+	height: 40px;
+	background-color: #BBBBBB;
+
+	// border: solid 1px;
+	box-shadow: 1px 3px;
+	border-color: #AAAAAA;
+
+	border-radius: 10px;
+
+}
+
+.calcDataComponent{
+	// position: relative;
+	width: 250px;
+	height: 50px;
+
+	margin: 10px;
+	background-color: #AAAAAA;
+  // color: navy;
+  color: white;
+
+	// font-size: 30px;
+	font-weight: bold;
+	// border: dotted 2px;
+	// border-color: red;
+	border-radius: 10px;
+	box-shadow: 2px 2px 2px 2px black;
+
+	z-index: 2;
+}
+
+#showTmpTaskArea{
+	opacity: 0;
+	position: absolute;
+	// position: relative;
+	width: 0px;
+	// width: 100%;
+	height: 0px;
+	// height: 100%;
+	transition: 0.5s;
+
+}
+
+#listSpace{
+	height: 350px;
+}
+
+.list{
 	width: 200px;
 	height: 50px;
 
-	margin: 5px;
+	// margin: auto;
+
+	margin: 5px auto;
 
 	// border: solid;
 	border-radius: 10px;
@@ -201,9 +294,27 @@ body{
   box-shadow: 0px 1px;
 }
 
-.List:hover{
+.list:hover{
+	background-color: #EEEEEE;
+}
+
+.page_num{
+	height: 25px;
+	width:  25px;
+
+	border: solid;
+	border-radius: 30px;
+	border-color: #EEEEEE;
+
 	background-color: #EEEEEE;
 
+	display: grid;
+  place-items: center;
+}
+
+.page_num:hover{
+	border-color: #DDDDDD;
+	background-color: #DDDDDD;
 }
 
 #showTasksSpace{
@@ -211,21 +322,50 @@ body{
 	// padding-top: 1px;
 	position: relative;
 	height: 450px;
+
+	border: solid;
+	border-color: #FFCC99;
+	border-radius: 10px;
 }
 
-#showTmpTaskArea{
-	opacity: 0;
-	position: absolute;
-	// position: relative;
-	width: 0px;
-	// width: 100%;
-	height: 0px;
-	// height: 100%;
-	
+#inputWork_footer{
+	justify-content:space-between;
+}
 
+.submitbutton{
 	// background-color: red;
-	transition: 0.5s;
-	// z-index: 2;
+	background-image: none;
+	border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 4px solid #aaa;
+
+  padding: 5px 8px;
+  color: #fff;
+  background-color: #666;
+  border-radius: 10px;
+    box-shadow: 2px 2px 2px 2px black;
+}
+
+.submitbutton:active{
+	// background-color: red;
+	border-bottom: none;
+  background-color: #888;
+}
+
+.btn-submit{
+  width: 300px;
+  height: 50px;
+  padding: 5px 8px;
+  border-radius: 10px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 4px solid #aaa;
+  background-image: none;
+  background-color: #666;
+  font-size: 20px;
+  color: #fff;
 }
 
 #showTmpTaskArea.tmpTaskList{
@@ -245,7 +385,6 @@ body{
 }
 
 .deleteClass{
-	/*要らないかも!?*/
 	height: 0%;
 	width: 0%;
 
@@ -260,11 +399,13 @@ body{
 	width: 120px;
 	height: 40px;
 
-  border: solid;
-  border-color: black;
+  // border: solid;
+  // border-color: black;
 
   background-color: rgba(255, 204, 153, 1);
   border-radius: 10px;
+
+  box-shadow: 2px 2px 2px 2px black;
 
 }
 
@@ -284,25 +425,180 @@ body{
 
 
 #backButton{
-  /*width: 30px;*/
-  width: 50px;
-  height: 30px;
+	position: relative;
+  width: 40px;
+  height: 40px;
 
-  background-color: red;
-  border: solid;
-  opacity:  0.3;
+  // font-size: 30px;
+  // font: bold;
+
+  background-color: #EEEEEE;
+  border:  3px  solid;
+  border-color: #DDDDDD;
+  opacity:  1;
+
+  border-radius: 120px;
+
+
+}
+
+.arrow-round {
+  position: relative;
+  top:  15px;
+  left: 5px;
+  display: block;
+  width: 20px;
+  height: 4px;
+  border-radius: 5px;
+  // background-color: #1E88E5;
+  background-color: #999999;
+}
+.arrow-round::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  display: block;
+  width: 13px;
+  height: 5px;
+  border-radius: 5px;
+  // background-color: #FDD835;
+  background-color: #999999;
+  transform: rotate(45deg);
+}
+.arrow-round::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+  display: block;
+  width: 13px;
+  height: 5px;
+  border-radius: 5px;
+  // background-color: #e53935;
+  background-color: #999999;
+  transform: rotate(135deg);
 }
 
 #showProjectName{
   width: 250px;
-  height: 30px;
+  height: 40px;
 
-  background-color: green;
-  border: solid;
-  opacity:  0.3;
+  background-color: #EEEEEE;
+  
+  border: 3px  solid;
+  border-color: #DDDDDD;
+  opacity:  1;
+
+  border-radius: 120px;
+
+  display: grid;
+  place-items: center;
 }
 
 
 .dropedTasks{
+	position: relative;
 	opacity: 1;
+
+	z-index: 2;
+}
+
+
+	.line1{
+		top: 10px;
+	}
+	.line2{
+		top: 20px;
+	}
+	.line3{
+		top: 30px;
+	}
+
+.clicked{
+	.line1{
+		transform: rotate(45deg);
+		top: 20px;
+	}
+	.line2{
+		// width: 0px;
+		display: none;
+	}
+	.line3{
+		transform: rotate(-45deg);
+		top: 20px;
+	}
+	.menu {
+		right: 8px;
+	}
+
+
+
+
+}
+
+#hamburgerMenu{
+	position: relative;
+	width:  40px;
+	height: 40px;
+	background-color: #BBBBBB;
+	cursor: pointer;
+
+	transition: all 0.3s;
+	z-index: 200;
+
+	.hamburgerMenuLine{
+		position: absolute;
+	  left: 10px;
+	  width: 20px;
+	  height: 1px;
+		background-color: #333333;
+	}
+
+}
+
+
+.menu {
+	position: fixed;
+	width: 300px;
+	height: 300px;
+	right: -1400px;
+	background-color: aquamarine;
+	transition: all 0.3s;
+	top: 100px;
+	z-index: 200;
+
+	// display: none;
+
+	.register_work{
+		position: absolute;
+		left: -500px;
+		width: 500px;
+		height: 400px;
+
+		border: solid;
+		// border-color: red;
+		
+		background-color: white;
+	}
+}
+
+
+
+
+
+
+	#allWrapper{
+		position: fixed;
+		width:  0%;
+		height: 0%;
+		opacity: 0.5;
+		background-color: black;
+		z-index: 200;
+
+		&.clicked{
+			width: 100%;
+			height:  100%;
+		}
+
 }
